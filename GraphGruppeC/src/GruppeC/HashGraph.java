@@ -1,4 +1,5 @@
 package GruppeC;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,31 +10,28 @@ public class HashGraph<V> implements Graph<V> {
 	/**
 	 * @author Jan Fischer
 	 */
+
 	
-	
-	HashMap<V, String> vertexLabel;
-	HashMap<V, HashMap<V,String>> edges;
+	HashMap<Node<V>, HashSet<Node<V>>>  edges;
 
 	public HashGraph() {
-		
-		vertexLabel = new HashMap<>();
+
 		edges = new HashMap<>();
-		
-		
+
 	}
 
 	@Override
-	public void populate(Collection<VertexData<V>> vertices, Iterator<Edge<V>> edges) {
+	public void populate(Collection<VertexData<V>> vertices, Iterator<Edge<Node<V>>> edges) {
 		for (VertexData<V> v : vertices) {
-			this.edges.put(v.getV(), new HashMap<V,String>());
-			this.vertexLabel.put(v.getV(),v.getLabel());
-			}
+			Node<V> node = new Node<V>(null,v.getLabel(), v.getV());
+			this.edges.put(node, new HashSet<Node<V>>());
+			
+		}
 		while (edges.hasNext()) {
-			Edge<V> e = edges.next();
-			this.edges.get(e.getA()).put(e.getB(), e.getLabel());
-			this.edges.get(e.getB()).put(e.getA(), e.getLabel());
+			Edge<Node<V>> e = edges.next();
+			this.edges.get();
 			
-			
+
 		}
 
 	}
@@ -46,33 +44,31 @@ public class HashGraph<V> implements Graph<V> {
 
 	@Override
 	public Iterator<Edge<V>> getAllEdges() {
-		//Erstelle leeres Hashset
+		// Erstelle leeres Hashset
 		HashSet<Edge<V>> edges = new HashSet<>();
-		
-		//Füge nun nach und nach die Kanten aus dem Graphen in das HashSet ein und erstelle dabei Edge Klassen
+
+		// Füge nun nach und nach die Kanten aus dem Graphen in das HashSet ein
+		// und erstelle dabei Edge Klassen
 		for (V v1 : this.edges.keySet()) {
-			for(V v2 : this.edges.get(v1).keySet()){
-				edges.add(new Edge<V>(v1, v2, this.edges.get(v1).get(v2)));				
+			for (V v2 : this.edges.get(v1).keySet()) {
+				edges.add(new Edge<V>(v1, v2, this.edges.get(v1).get(v2)));
 			}
 		}
-			
-		
+
 		return edges.iterator();
 	}
 
-	//Alle Vertices sind im KeySet von der HashMap vorhanden.
+	// Alle Vertices sind im KeySet von der HashMap vorhanden.
 	@Override
 	public Iterator<V> getAllVertices() {
 		return this.edges.keySet().iterator();
 	}
 
-	
-	
 	@Override
 	public Iterator<Edge<V>> edgesOf(V v) {
 		HashSet<Edge<V>> set = new HashSet<>();
-		for(V v2: this.edges.get(v).keySet()){
-			set.add(new Edge<V>(v, v2,this.edges.get(v).get(v2)));
+		for (V v2 : this.edges.get(v).keySet()) {
+			set.add(new Edge<V>(v, v2, this.edges.get(v).get(v2)));
 		}
 		return set.iterator();
 	}
@@ -105,9 +101,74 @@ public class HashGraph<V> implements Graph<V> {
 	@Override
 	public String getVertexLabel(V v) {
 		return this.vertexLabel.get(v);
-		
+
 	}
 
-	
+	public class Node {
+		private String name;
+		
+
+		private String label;
+		private int status = 0;
+		private V v;
+
+		public Node(String name, String label, V v) {
+			this.name = name;
+			this.label = label;
+			this.v = v;
+		}
+		
+		public int getStatus() {
+			return status;
+		}
+
+		public void setStatus(int status) {
+			this.status = status;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getLabel() {
+			return label;
+		}
+
+		public V getV() {
+			return v;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + getOuterType().hashCode();
+			result = prime * result + ((v == null) ? 0 : v.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Node other = (Node) obj;
+			if (!getOuterType().equals(other.getOuterType()))
+				return false;
+			if (v == null) {
+				if (other.v != null)
+					return false;
+			} else if (!v.equals(other.v))
+				return false;
+			return true;
+		}
+
+		private HashGraph getOuterType() {
+			return HashGraph.this;
+		}
+	}
 
 }

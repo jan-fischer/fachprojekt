@@ -1,5 +1,9 @@
 package GruppeC;
 
+import java.util.HashSet;
+
+import GruppeC.HashGraph.Node;
+
 /**
  * Hilfsklasse zum Auslesen von Graphinhalten. Stellt eine Kante dar. Beinhaltet
  * beide Knoten, sowie das Label der Kante.
@@ -9,8 +13,7 @@ package GruppeC;
  * @param <V>
  */
 public class Edge<V> {
-	private V a;
-	private V b;
+	HashSet<Node> nodes;
 	private String label;
 
 	/**
@@ -23,33 +26,25 @@ public class Edge<V> {
 	/**
 	 * 
 	 */
-	public Edge(V a, V b) {
-		setA(a);
-		setB(b);
+	public Edge(Node a, Node b) {
+		nodes.add(a);
+		nodes.add(b);
+		
 	}
 
 	/**
 	 * 
 	 */
-	public Edge(V a, V b, String label) {
-		setA(a);
-		setB(b);
+	public Edge(Node a, Node b, String label) {
+		nodes.add(a);
+		nodes.add(b);
 		setLabel(label);
 	}
 
 	/**
 	 * 
 	 */
-	public void setA(V a) {
-		this.a = a;
-	}
-
-	/**
-	 * 
-	 */
-	public void setB(V b) {
-		this.b = b;
-	}
+	
 
 	/**
 	 * 
@@ -61,17 +56,7 @@ public class Edge<V> {
 	/**
 	 * 
 	 */
-	public V getA() {
-		return a;
-	}
-
-	/**
-	 * 
-	 */
-	public V getB() {
-		return b;
-	}
-
+	
 	/**
 	 * 
 	 */
